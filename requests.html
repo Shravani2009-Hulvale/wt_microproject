@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Requests - SkillHub</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f5f7fb;
+            color: #222;
+        }
+
+        .sidebar {
+            position: fixed;
+            width: 240px;
+            height: 100vh;
+            background: #111827;
+            color: white;
+            padding: 25px 15px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .logo span {
+            color: #6366f1;
+        }
+
+        .nav a {
+            display: block;
+            padding: 13px 15px;
+            margin: 5px 0;
+            text-decoration: none;
+            color: #cbd5e1;
+            border-radius: 8px;
+        }
+
+        .nav a:hover,
+        .nav a.active {
+            background: #6366f1;
+            color: white;
+        }
+
+        .main {
+            margin-left: 240px;
+            padding: 30px;
+        }
+
+        h1 {
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #64748b;
+            margin-bottom: 25px;
+        }
+
+        .stats {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            flex: 1;
+            min-width: 160px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+        }
+
+        .stat h2 {
+            color: #6366f1;
+        }
+
+        .stat p {
+            color: #64748b;
+            margin-top: 5px;
+        }
+
+        .send-box,
+        .requests-box {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
+        }
+
+        .send-box h2,
+        .requests-box h2 {
+            margin-bottom: 20px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .form-group {
+            flex: 1;
+            min-width: 220px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: bold;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 7px;
+            outline: none;
+        }
+
+        textarea {
+            margin-top: 15px;
+            resize: vertical;
+            min-height: 90px;
+        }
+
+        input:focus,
+        textarea:focus {
+            border-color: #6366f1;
+        }
+
+        button {
+            border: none;
+            padding: 9px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            color: white;
+            background: #6366f1;
+        }
+
+        .send-btn {
+            margin-top: 15px;
+            padding: 12px 25px;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            background: #e5e7eb;
+            color: #374151;
+        }
+
+        .tab.active {
+            background: #6366f1;
+            color: white;
+        }
+
+        .request-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 18px;
+            margin-bottom: 15px;
+        }
+
+        .request-top {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .request-card h3 {
+            margin-bottom: 7px;
+        }
+
+        .request-info {
+            color: #64748b;
+            margin: 5px 0;
+        }
+
+        .message {
+            margin-top: 12px;
+            padding: 10px;
+            background: #f8fafc;
+            border-radius: 7px;
+        }
+
+        .badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 13px;
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .accepted {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .rejected {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .cancelled {
+            background: #e5e7eb;
+            color: #374151;
+        }
+
+        .actions {
+            margin-top: 15px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .accept {
+            background: #16a34a;
+        }
+
+        .reject {
+            background: #dc2626;
+        }
+
+        .cancel {
+            background: #64748b;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 30px;
+            color: #64748b;
+        }
+
+        @media(max-width: 800px) {
+            .sidebar {
+                width: 190px;
+            }
+
+            .main {
+                margin-left: 190px;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<aside id="sidebar"></aside>
+<script src="sidebar.js"></script>
+
+<div class="main">
+
+    <h1>Skill Requests</h1>
+
+    <p class="subtitle">
+        Send and manage skill-sharing requests.
+    </p>
+
+    <div class="stats">
+
+        <div class="stat">
+            <h2 id="totalRequests">0</h2>
+            <p>Total Requests</p>
+        </div>
+
+        <div class="stat">
+            <h2 id="pendingRequests">0</h2>
+            <p>Pending</p>
+        </div>
+
+        <div class="stat">
+            <h2 id="acceptedRequests">0</h2>
+            <p>Accepted</p>
+        </div>
+
+        <div class="stat">
+            <h2 id="rejectedRequests">0</h2>
+            <p>Rejected</p>
+        </div>
+
+    </div>
+
+
+    <!-- SEND REQUEST -->
+
+    <div class="send-box">
+
+        <h2>Send Skill Request</h2>
+
+        <div class="form-row">
+
+            <div class="form-group">
+
+                <label>Your Student ID</label>
+
+                <input
+                    type="text"
+                    id="fromStudentId"
+                    placeholder="Example: CE001"
+                    readonly>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Student ID</label>
+
+                <input
+                    type="text"
+                    id="toStudentId"
+                    placeholder="Example: CE002">
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Skill Name</label>
+
+                <input
+                    type="text"
+                    id="skillName"
+                    placeholder="Example: JavaScript">
+
+            </div>
+
+        </div>
+
+
+        <textarea
+            id="message"
+            placeholder="Write a message..."></textarea>
+
+
+        <button
+            class="send-btn"
+            onclick="sendRequest()">
+
+            Send Request
+
+        </button>
+
+    </div>
+
+
+    <!-- REQUESTS -->
+
+    <div class="requests-box">
+
+        <h2>My Requests</h2>
+
+
+        <div class="tabs">
+
+            <button
+                class="tab active"
+                onclick="showTab('all', this)">
+
+                All
+
+            </button>
+
+
+            <button
+                class="tab"
+                onclick="showTab('received', this)">
+
+                Received
+
+            </button>
+
+
+            <button
+                class="tab"
+                onclick="showTab('sent', this)">
+
+                Sent
+
+            </button>
+
+        </div>
+
+
+        <div id="requestArea">
+
+            <div class="empty">
+                Loading requests...
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- CURRENT STUDENT SESSION -->
+
+<script src="student-session.js"></script>
+
+
+<script>
+
+const API_URL =
+    "http://localhost:5000/api/requests";
+
+
+// GET CURRENT STUDENT FROM LOCAL STORAGE
+
+const CURRENT_STUDENT_ID =
+    getCurrentStudent();
+
+
+let allRequests = [];
+
+let currentTab = "all";
+
+
+// ==========================================
+// CHECK CURRENT STUDENT
+// ==========================================
+
+if (!CURRENT_STUDENT_ID) {
+
+    document.getElementById("requestArea").innerHTML =
+        `<div class="empty">
+            No current student selected.
+            Please select your Student ID first.
+        </div>`;
+
+}
+else {
+
+    document.getElementById("fromStudentId").value =
+        CURRENT_STUDENT_ID;
+
+}
+
+
+// ==========================================
+// LOAD REQUESTS
+// ==========================================
+
+async function loadRequests() {
+
+    if (!CURRENT_STUDENT_ID) {
+        return;
+    }
+
+    try {
+
+        const response = await fetch(
+            API_URL + "/" + CURRENT_STUDENT_ID
+        );
+
+        const result = await response.json();
+
+
+        if (!result.success) {
+
+            throw new Error(result.message);
+
+        }
+
+
+        allRequests = result.data;
+
+
+        updateStats();
+
+        displayRequests();
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        document.getElementById("requestArea").innerHTML =
+            `<div class="empty">
+                Error: ${error.message}
+            </div>`;
+
+    }
+
+}
+
+
+// ==========================================
+// SEND REQUEST
+// ==========================================
+
+async function sendRequest() {
+
+    const fromStudentId =
+        document.getElementById("fromStudentId").value.trim();
+
+
+    const toStudentId =
+        document.getElementById("toStudentId").value.trim();
+
+
+    const skillName =
+        document.getElementById("skillName").value.trim();
+
+
+    const message =
+        document.getElementById("message").value.trim();
+
+
+    if (
+        !fromStudentId ||
+        !toStudentId ||
+        !skillName
+    ) {
+
+        alert(
+            "Please fill Student IDs and Skill Name."
+        );
+
+        return;
+
+    }
+
+
+    if (fromStudentId === toStudentId) {
+
+        alert(
+            "You cannot send a request to yourself."
+        );
+
+        return;
+
+    }
+
+
+    try {
+
+        const response =
+            await fetch(API_URL, {
+
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+
+                    fromStudentId:
+                        fromStudentId,
+
+                    toStudentId:
+                        toStudentId,
+
+                    skillName:
+                        skillName,
+
+                    message:
+                        message
+
+                })
+
+            });
+
+
+        const result =
+            await response.json();
+
+
+        if (!result.success) {
+
+            throw new Error(
+                result.message
+            );
+
+        }
+
+
+        alert(
+            "Request sent successfully!"
+        );
+
+
+        document.getElementById(
+            "toStudentId"
+        ).value = "";
+
+
+        document.getElementById(
+            "skillName"
+        ).value = "";
+
+
+        document.getElementById(
+            "message"
+        ).value = "";
+
+
+        loadRequests();
+
+
+    } catch (error) {
+
+        alert(
+            "Error: " + error.message
+        );
+
+    }
+
+}
+
+
+// ==========================================
+// UPDATE STATUS
+// ==========================================
+
+async function updateStatus(
+    id,
+    status
+) {
+
+    try {
+
+        const response =
+            await fetch(
+                API_URL + "/" + id,
+                {
+                    method: "PUT",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        status: status
+                    })
+                }
+            );
+
+
+        const result =
+            await response.json();
+
+
+        if (!result.success) {
+
+            throw new Error(
+                result.message
+            );
+
+        }
+
+
+        loadRequests();
+
+
+    } catch (error) {
+
+        alert(
+            "Error: " + error.message
+        );
+
+    }
+
+}
+
+
+// ==========================================
+// TABS
+// ==========================================
+
+function showTab(
+    tab,
+    button
+) {
+
+    currentTab = tab;
+
+
+    document
+        .querySelectorAll(".tab")
+        .forEach(
+            btn =>
+                btn.classList.remove(
+                    "active"
+                )
+        );
+
+
+    button.classList.add("active");
+
+
+    displayRequests();
+
+}
+
+
+// ==========================================
+// DISPLAY REQUESTS
+// ==========================================
+
+function displayRequests() {
+
+    let requests =
+        allRequests;
+
+
+    if (
+        currentTab === "received"
+    ) {
+
+        requests =
+            allRequests.filter(
+                request =>
+                    request.toStudentId ===
+                    CURRENT_STUDENT_ID
+            );
+
+    }
+
+
+    if (
+        currentTab === "sent"
+    ) {
+
+        requests =
+            allRequests.filter(
+                request =>
+                    request.fromStudentId ===
+                    CURRENT_STUDENT_ID
+            );
+
+    }
+
+
+    if (requests.length === 0) {
+
+        document.getElementById(
+            "requestArea"
+        ).innerHTML =
+
+            `<div class="empty">
+                No requests found.
+            </div>`;
+
+        return;
+
+    }
+
+
+    let html = "";
+
+
+    requests.forEach(
+        request => {
+
+            const isReceived =
+                request.toStudentId ===
+                CURRENT_STUDENT_ID;
+
+
+            const statusClass =
+                request.status.toLowerCase();
+
+
+            html += `
+
+                <div class="request-card">
+
+                    <div class="request-top">
+
+                        <div>
+
+                            <h3>
+                                ${request.skillName}
+                            </h3>
+
+
+                            <p class="request-info">
+
+                                From:
+                                ${request.fromStudentId}
+
+                            </p>
+
+
+                            <p class="request-info">
+
+                                To:
+                                ${request.toStudentId}
+
+                            </p>
+
+                        </div>
+
+
+                        <span
+                            class="badge ${statusClass}">
+
+                            ${request.status}
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="message">
+
+                        <strong>
+                            Message:
+                        </strong>
+
+                        ${request.message ||
+                        "No message"}
+
+                    </div>
+
+
+                    <div class="actions">
+
+            `;
+
+
+            // RECEIVED REQUEST
+
+            if (
+                isReceived &&
+                request.status ===
+                "Pending"
+            ) {
+
+                html += `
+
+                    <button
+                        class="accept"
+                        onclick="updateStatus(
+                            '${request._id}',
+                            'Accepted'
+                        )">
+
+                        Accept
+
+                    </button>
+
+
+                    <button
+                        class="reject"
+                        onclick="updateStatus(
+                            '${request._id}',
+                            'Rejected'
+                        )">
+
+                        Reject
+
+                    </button>
+
+                `;
+
+            }
+
+
+            // SENT REQUEST
+
+            if (
+                !isReceived &&
+                request.status ===
+                "Pending"
+            ) {
+
+                html += `
+
+                    <button
+                        class="cancel"
+                        onclick="updateStatus(
+                            '${request._id}',
+                            'Cancelled'
+                        )">
+
+                        Cancel
+
+                    </button>
+
+                `;
+
+            }
+
+
+            html += `
+
+                    </div>
+
+                </div>
+
+            `;
+
+        }
+    );
+
+
+    document.getElementById(
+        "requestArea"
+    ).innerHTML = html;
+
+}
+
+
+// ==========================================
+// STATISTICS
+// ==========================================
+
+function updateStats() {
+
+    document.getElementById(
+        "totalRequests"
+    ).textContent =
+        allRequests.length;
+
+
+    document.getElementById(
+        "pendingRequests"
+    ).textContent =
+
+        allRequests.filter(
+            request =>
+                request.status ===
+                "Pending"
+        ).length;
+
+
+    document.getElementById(
+        "acceptedRequests"
+    ).textContent =
+
+        allRequests.filter(
+            request =>
+                request.status ===
+                "Accepted"
+        ).length;
+
+
+    document.getElementById(
+        "rejectedRequests"
+    ).textContent =
+
+        allRequests.filter(
+            request =>
+                request.status ===
+                "Rejected"
+        ).length;
+
+}
+
+
+// ==========================================
+// START
+// ==========================================
+
+if (CURRENT_STUDENT_ID) {
+
+    loadRequests();
+
+}
+
+</script>
+
+</body>
+</html>

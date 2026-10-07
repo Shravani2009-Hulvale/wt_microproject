@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>XML Skills - Student Skill Management System</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f6fb;
+            color: #222;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 240px;
+            height: 100vh;
+            background: #172033;
+            color: white;
+            padding: 20px 15px;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .logo span {
+            color: #4f8cff;
+        }
+
+        .subtitle {
+            font-size: 12px;
+            color: #9da8ba;
+            margin-bottom: 30px;
+        }
+
+        .menu-title {
+            font-size: 11px;
+            color: #77839a;
+            margin: 15px 10px 8px;
+            text-transform: uppercase;
+        }
+
+        .sidebar a {
+            display: block;
+            text-decoration: none;
+            color: #c8cfdb;
+            padding: 12px 14px;
+            margin: 4px 0;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .sidebar a:hover {
+            background: #263653;
+            color: white;
+        }
+
+        .sidebar a.active {
+            background: #3d6ff2;
+            color: white;
+        }
+
+        .main {
+            margin-left: 240px;
+            min-height: 100vh;
+        }
+
+        .topbar {
+            height: 70px;
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+        }
+
+        .search {
+            width: 300px;
+        }
+
+        .search input {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            outline: none;
+        }
+
+        .user-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #3d6ff2;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .heading {
+            margin-bottom: 25px;
+        }
+
+        .heading h1 {
+            font-size: 28px;
+        }
+
+        .heading p {
+            color: #777;
+            margin-top: 6px;
+        }
+
+        .xml-info {
+            background: #eef3ff;
+            border-left: 4px solid #3d6ff2;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            color: #34446a;
+        }
+
+        .controls {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.04);
+        }
+
+        .controls input,
+        .controls select {
+            padding: 10px 14px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            outline: none;
+        }
+
+        .controls input {
+            width: 280px;
+        }
+
+        .btn {
+            background: #3d6ff2;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: #315ed1;
+        }
+
+        .skill-count {
+            margin-bottom: 15px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .table-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            overflow-x: auto;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.04);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #f7f8fb;
+            padding: 14px;
+            text-align: left;
+            font-size: 13px;
+        }
+
+        td {
+            padding: 14px;
+            border-bottom: 1px solid #eee;
+            font-size: 13px;
+        }
+
+        .level {
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .advanced {
+            background: #e0f7ed;
+            color: #16865a;
+        }
+
+        .intermediate {
+            background: #fff3cd;
+            color: #9a6b00;
+        }
+
+        .beginner {
+            background: #e8eefc;
+            color: #3d6ff2;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 30px;
+            color: #888;
+        }
+
+        @media(max-width: 700px) {
+
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+            }
+
+            .main {
+                margin-left: 0;
+            }
+
+            .topbar {
+                padding: 0 15px;
+            }
+
+            .content {
+                padding: 15px;
+            }
+
+            .controls input {
+                width: 100%;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<aside id="sidebar"></aside>
+<script src="sidebar.js"></script>
+
+<!-- MAIN -->
+
+<div class="main">
+
+
+    <div class="topbar">
+
+        <div class="search">
+
+            <input
+                type="text"
+                placeholder="Search..."
+                onkeyup="searchXML()"
+                id="topSearch">
+
+        </div>
+
+
+        <div class="user-area">
+
+            <span>🔔</span>
+
+            <div class="avatar">
+                RK
+            </div>
+
+            <span>
+                Rahul Kumar
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div class="content">
+
+
+        <div class="heading">
+
+            <h1>
+                XML Skill Repository
+            </h1>
+
+            <p>
+                Skill information loaded dynamically from an XML file.
+            </p>
+
+        </div>
+
+
+        <div class="xml-info">
+
+            <b>CO4 Demonstration:</b>
+
+            This page uses JavaScript to load and parse
+            <b>skills.xml</b> and display its data dynamically.
+
+        </div>
+
+
+        <div class="controls">
+
+            <input
+                type="text"
+                id="skillSearch"
+                placeholder="Search skill..."
+                onkeyup="searchXML()">
+
+
+            <select
+                id="categoryFilter"
+                onchange="filterXML()">
+
+                <option value="All">
+                    All Categories
+                </option>
+
+                <option value="Programming">
+                    Programming
+                </option>
+
+                <option value="Web Development">
+                    Web Development
+                </option>
+
+                <option value="Database">
+                    Database
+                </option>
+
+                <option value="Networking">
+                    Networking
+                </option>
+
+                <option value="Server-side Programming">
+                    Server-side Programming
+                </option>
+
+            </select>
+
+
+            <button
+                class="btn"
+                onclick="loadXML()">
+
+                🔄 Reload XML
+
+            </button>
+
+        </div>
+
+
+        <div class="skill-count"
+             id="skillCount">
+
+            Loading skills...
+
+        </div>
+
+
+        <div class="table-card">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Skill ID
+                        </th>
+
+                        <th>
+                            Skill Name
+                        </th>
+
+                        <th>
+                            Category
+                        </th>
+
+                        <th>
+                            Level
+                        </th>
+
+                        <th>
+                            Description
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="skillTable">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    let xmlSkills = [];
+
+
+    /* LOAD XML */
+
+    function loadXML() {
+
+        fetch("skills.xml")
+
+        .then(function(response) {
+
+            if (!response.ok) {
+                throw new Error("XML file not found");
+            }
+
+            return response.text();
+
+        })
+
+        .then(function(data) {
+
+            let parser =
+                new DOMParser();
+
+            let xml =
+                parser.parseFromString(
+                    data,
+                    "text/xml"
+                );
+
+
+            let skills =
+                xml.getElementsByTagName("skill");
+
+
+            xmlSkills = [];
+
+
+            for (
+                let i = 0;
+                i < skills.length;
+                i++
+            ) {
+
+                let skill =
+                    skills[i];
+
+
+                xmlSkills.push({
+
+                    id:
+                        skill.getElementsByTagName("id")[0]
+                        .textContent,
+
+                    name:
+                        skill.getElementsByTagName("name")[0]
+                        .textContent,
+
+                    category:
+                        skill.getElementsByTagName("category")[0]
+                        .textContent,
+
+                    level:
+                        skill.getElementsByTagName("level")[0]
+                        .textContent,
+
+                    description:
+                        skill.getElementsByTagName("description")[0]
+                        .textContent
+
+                });
+
+            }
+
+
+            displaySkills(xmlSkills);
+
+        })
+
+        .catch(function(error) {
+
+            document.getElementById("skillTable")
+                .innerHTML =
+                "<tr><td colspan='5' class='empty'>" +
+                "Unable to load skills.xml. " +
+                "Make sure both files are in the same folder." +
+                "</td></tr>";
+
+            document.getElementById("skillCount")
+                .innerText =
+                "XML loading failed.";
+
+            console.log(error);
+
+        });
+
+    }
+
+
+    /* DISPLAY */
+
+    function displaySkills(skills) {
+
+        let table =
+            document.getElementById("skillTable");
+
+
+        table.innerHTML = "";
+
+
+        if (skills.length === 0) {
+
+            table.innerHTML =
+                "<tr><td colspan='5' class='empty'>" +
+                "No skills found." +
+                "</td></tr>";
+
+            document.getElementById("skillCount")
+                .innerText =
+                "0 skills found.";
+
+            return;
+
+        }
+
+
+        skills.forEach(function(skill) {
+
+            let levelClass =
+                skill.level.toLowerCase();
+
+
+            let row =
+                document.createElement("tr");
+
+
+            row.innerHTML =
+
+                "<td>" +
+                skill.id +
+                "</td>" +
+
+                "<td><b>" +
+                skill.name +
+                "</b></td>" +
+
+                "<td>" +
+                skill.category +
+                "</td>" +
+
+                "<td>" +
+
+                "<span class='level " +
+                levelClass +
+                "'>" +
+
+                skill.level +
+
+                "</span>" +
+
+                "</td>" +
+
+                "<td>" +
+                skill.description +
+                "</td>";
+
+
+            table.appendChild(row);
+
+        });
+
+
+        document.getElementById("skillCount")
+            .innerText =
+            skills.length +
+            " skills loaded from skills.xml";
+
+    }
+
+
+    /* SEARCH */
+
+    function searchXML() {
+
+        let search =
+            document.getElementById("skillSearch")
+            .value
+            .toLowerCase();
+
+
+        let topSearch =
+            document.getElementById("topSearch")
+            .value
+            .toLowerCase();
+
+
+        let category =
+            document.getElementById("categoryFilter")
+            .value;
+
+
+        let finalSearch =
+            search || topSearch;
+
+
+        let filtered =
+            xmlSkills.filter(function(skill) {
+
+                let matchesSearch =
+                    skill.name
+                    .toLowerCase()
+                    .includes(finalSearch);
+
+
+                let matchesCategory =
+                    category === "All" ||
+                    skill.category === category;
+
+
+                return matchesSearch &&
+                       matchesCategory;
+
+            });
+
+
+        displaySkills(filtered);
+
+    }
+
+
+    /* CATEGORY FILTER */
+
+    function filterXML() {
+
+        searchXML();
+
+    }
+
+
+    /* LOAD XML WHEN PAGE OPENS */
+
+    window.onload = function() {
+
+        loadXML();
+
+    };
+
+</script>
+
+</body>
+
+</html>

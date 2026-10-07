@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Student Skill Management System</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f6fb;
+            color: #1f2937;
+        }
+
+        /* MAIN */
+
+        .main {
+            margin-left: 250px;
+            min-height: 100vh;
+        }
+
+        /* TOPBAR */
+
+        .topbar {
+            height: 75px;
+            background: white;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 35px;
+
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .search {
+            width: 350px;
+
+            background: #f8fafc;
+
+            border: 1px solid #e5e7eb;
+
+            padding: 11px 15px;
+
+            border-radius: 9px;
+        }
+
+        .search input {
+            border: none;
+            outline: none;
+
+            background: transparent;
+
+            width: 90%;
+
+            font-size: 13px;
+        }
+
+        .user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+
+            background: #6366f1;
+
+            color: white;
+
+            border-radius: 50%;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-weight: bold;
+        }
+
+        /* CONTENT */
+
+        .content {
+            padding: 35px;
+        }
+
+        .welcome {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 30px;
+        }
+
+        .welcome small {
+            color: #6366f1;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .welcome h1 {
+            font-size: 30px;
+            margin: 6px 0;
+        }
+
+        .welcome p {
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        /* BUTTON */
+
+        .btn {
+            background: linear-gradient(
+                135deg,
+                #6366f1,
+                #8b5cf6
+            );
+
+            color: white;
+
+            border: none;
+
+            padding: 12px 18px;
+
+            border-radius: 9px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        /* STATISTICS */
+
+        .stats {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 18px;
+
+            margin-bottom: 25px;
+        }
+
+        .card {
+            background: white;
+
+            padding: 22px;
+
+            border-radius: 14px;
+
+            border: 1px solid #e5e7eb;
+
+            transition: 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 8px 20px rgba(15, 23, 42, 0.06);
+        }
+
+        .card-title {
+            color: #64748b;
+            font-size: 12px;
+        }
+
+        .card h2 {
+            margin-top: 8px;
+            font-size: 28px;
+        }
+
+        .card-icon {
+            width: 45px;
+            height: 45px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 10px;
+
+            background: #eef2ff;
+
+            margin-bottom: 12px;
+
+            font-size: 20px;
+        }
+
+        /* DASHBOARD GRID */
+
+        .dashboard-grid {
+            display: grid;
+
+            grid-template-columns:
+                2fr 1fr;
+
+            gap: 20px;
+        }
+
+        .panel {
+            background: white;
+
+            padding: 22px;
+
+            border-radius: 14px;
+
+            border: 1px solid #e5e7eb;
+        }
+
+        .panel h3 {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .panel p {
+            color: #94a3b8;
+            font-size: 11px;
+            margin-bottom: 20px;
+        }
+
+        /* TABLE */
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+
+            font-size: 11px;
+
+            color: #94a3b8;
+
+            padding: 10px;
+
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        td {
+            padding: 13px 10px;
+
+            font-size: 12px;
+
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .status {
+            padding: 5px 9px;
+
+            border-radius: 20px;
+
+            font-size: 10px;
+
+            font-weight: bold;
+        }
+
+        .pending {
+            background: #fff7ed;
+            color: #ea580c;
+        }
+
+        .approved {
+            background: #ecfdf5;
+            color: #059669;
+        }
+
+        .rejected {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+
+        .cancelled {
+            background: #f1f5f9;
+            color: #64748b;
+        }
+
+        /* QUICK ACTIONS */
+
+        .quick-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .quick-action {
+            text-decoration: none;
+
+            padding: 13px;
+
+            border-radius: 9px;
+
+            background: #f8fafc;
+
+            color: #334155;
+
+            font-size: 13px;
+
+            transition: 0.2s;
+        }
+
+        .quick-action:hover {
+            background: #eef2ff;
+            color: #6366f1;
+        }
+
+        /* RESPONSIVE */
+
+        @media(max-width: 1000px) {
+
+            .stats {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+        @media(max-width: 700px) {
+
+            .main {
+                margin-left: 250px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .topbar {
+                padding: 0 15px;
+            }
+
+            .search {
+                width: 200px;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .welcome {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ================= COMMON SIDEBAR ================= -->
+
+<aside id="sidebar"></aside>
+
+
+<!-- ================= MAIN ================= -->
+
+<div class="main">
+
+
+    <!-- ================= TOP BAR ================= -->
+
+    <div class="topbar">
+
+        <div class="search">
+
+            🔍
+
+            <input
+                type="text"
+                placeholder="Search students or skills..."
+            >
+
+        </div>
+
+
+        <div class="user">
+
+            <span>🔔</span>
+
+            <div
+                class="avatar"
+                id="userAvatar">
+
+                A
+
+            </div>
+
+            <div>
+
+                <strong id="userName">
+                    Admin
+                </strong>
+
+                <br>
+
+                <small>
+                    Student
+                </small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ================= CONTENT ================= -->
+
+    <div class="content">
+
+
+        <!-- ================= WELCOME ================= -->
+
+        <div class="welcome">
+
+            <div>
+
+                <small>
+                    STUDENT SKILL MANAGEMENT
+                </small>
+
+                <h1>
+                    Dashboard
+                </h1>
+
+                <p>
+                    Manage students, skills and skill
+                    requests from one place.
+                </p>
+
+            </div>
+
+
+            <a
+                href="students.html"
+                class="btn">
+
+                + Add Student
+
+            </a>
+
+        </div>
+
+
+
+        <!-- ================= STATISTICS ================= -->
+
+        <div class="stats">
+
+
+            <div class="card">
+
+                <div class="card-icon">
+                    👨‍🎓
+                </div>
+
+                <span class="card-title">
+                    Total Students
+                </span>
+
+                <h2 id="totalStudents">
+                    0
+                </h2>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="card-icon">
+                    ⚡
+                </div>
+
+                <span class="card-title">
+                    Total Skills
+                </span>
+
+                <h2 id="totalSkills">
+                    0
+                </h2>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="card-icon">
+                    📨
+                </div>
+
+                <span class="card-title">
+                    Pending Requests
+                </span>
+
+                <h2 id="pendingRequests">
+                    0
+                </h2>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="card-icon">
+                    🏆
+                </div>
+
+                <span class="card-title">
+                    Approved Requests
+                </span>
+
+                <h2 id="acceptedRequests">
+                    0
+                </h2>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- ================= LOWER DASHBOARD ================= -->
+
+        <div class="dashboard-grid">
+
+
+            <!-- RECENT REQUESTS -->
+
+            <div class="panel">
+
+                <h3>
+                    Recent Skill Requests
+                </h3>
+
+                <p>
+                    Latest activity in the system
+                </p>
+
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Student
+                            </th>
+
+                            <th>
+                                Skill
+                            </th>
+
+                            <th>
+                                Level
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="requestsTable">
+
+                        <tr>
+
+                            <td
+                                colspan="4"
+                                style="
+                                    text-align:center;
+                                    padding:25px;
+                                    color:#94a3b8;
+                                ">
+
+                                Loading latest requests...
+
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+
+            <!-- QUICK ACTIONS -->
+
+            <div class="panel">
+
+                <h3>
+                    Quick Actions
+                </h3>
+
+                <p>
+                    Access important modules
+                </p>
+
+
+                <div class="quick-actions">
+
+
+                    <a
+                        href="students.html"
+                        class="quick-action">
+
+                        👨‍🎓
+                        Manage Students
+
+                    </a>
+
+
+                    <a
+                        href="skills.html"
+                        class="quick-action">
+
+                        ⚡
+                        Manage Skills
+
+                    </a>
+
+
+                    <a
+                        href="find-skills.html"
+                        class="quick-action">
+
+                        🔍
+                        Find Students by Skill
+
+                    </a>
+
+
+                    <a
+                        href="requests.html"
+                        class="quick-action">
+
+                        📨
+                        View Skill Requests
+
+                    </a>
+
+
+                    <a
+                        href="reports.html"
+                        class="quick-action">
+
+                        📊
+                        View Reports
+
+                    </a>
+
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- ================= SESSION ================= -->
+
+<script src="student-session.js"></script>
+
+<!-- ================= COMMON SIDEBAR ================= -->
+
+<script src="sidebar.js"></script>
+
+
+<script>
+
+
+const API =
+    "http://localhost:5000/api";
+
+
+// =================================================
+// LOAD DASHBOARD STATISTICS
+// =================================================
+
+async function loadDashboard() {
+
+    try {
+
+        const response =
+            await fetch(
+                `${API}/reports`
+            );
+
+
+        const result =
+            await response.json();
+
+
+        if (!result.success) {
+
+            console.log(
+                "Unable to load dashboard data"
+            );
+
+            return;
+
+        }
+
+
+        const data =
+            result.data;
+
+
+        document.getElementById(
+            "totalStudents"
+        ).textContent =
+            data.totalStudents;
+
+
+        document.getElementById(
+            "totalSkills"
+        ).textContent =
+            data.totalSkills;
+
+
+        document.getElementById(
+            "pendingRequests"
+        ).textContent =
+            data.requests.pending;
+
+
+        document.getElementById(
+            "acceptedRequests"
+        ).textContent =
+            data.requests.accepted;
+
+    }
+
+    catch (error) {
+
+        console.log(
+            "Dashboard Error:",
+            error
+        );
+
+    }
+
+}
+
+
+
+// =================================================
+// LOAD RECENT REQUESTS
+// =================================================
+
+async function loadRequests() {
+
+    try {
+
+        const response =
+            await fetch(
+                `${API}/requests/recent/all`
+            );
+
+
+        const result =
+            await response.json();
+
+
+        const table =
+            document.getElementById(
+                "requestsTable"
+            );
+
+
+        if (
+            !result.success ||
+            !result.data ||
+            result.data.length === 0
+        ) {
+
+            table.innerHTML = `
+
+                <tr>
+
+                    <td
+                        colspan="4"
+                        style="
+                            text-align:center;
+                            padding:25px;
+                            color:#94a3b8;
+                        ">
+
+                        No skill requests yet.
+
+                    </td>
+
+                </tr>
+
+            `;
+
+            return;
+
+        }
+
+
+        table.innerHTML = "";
+
+
+        result.data.forEach(
+            request => {
+
+                let statusClass =
+                    "pending";
+
+
+                if (
+                    request.status ===
+                    "Accepted"
+                ) {
+
+                    statusClass =
+                        "approved";
+
+                }
+
+                else if (
+                    request.status ===
+                    "Rejected"
+                ) {
+
+                    statusClass =
+                        "rejected";
+
+                }
+
+                else if (
+                    request.status ===
+                    "Cancelled"
+                ) {
+
+                    statusClass =
+                        "cancelled";
+
+                }
+
+
+                const row =
+                    document.createElement(
+                        "tr"
+                    );
+
+
+                row.innerHTML = `
+
+                    <td>
+                        ${escapeHTML(
+                            request.fromStudentName
+                        )}
+                    </td>
+
+                    <td>
+                        ${escapeHTML(
+                            request.skillName
+                        )}
+                    </td>
+
+                    <td>
+                        ${escapeHTML(
+                            request.level || "—"
+                        )}
+                    </td>
+
+                    <td>
+
+                        <span
+                            class="status ${statusClass}">
+
+                            ${escapeHTML(
+                                request.status
+                            )}
+
+                        </span>
+
+                    </td>
+
+                `;
+
+
+                table.appendChild(row);
+
+            }
+        );
+
+    }
+
+    catch (error) {
+
+        console.log(
+            "Request Error:",
+            error
+        );
+
+
+        document.getElementById(
+            "requestsTable"
+        ).innerHTML = `
+
+            <tr>
+
+                <td
+                    colspan="4"
+                    style="
+                        text-align:center;
+                        padding:25px;
+                        color:#dc2626;
+                    ">
+
+                    Unable to load requests.
+
+                </td>
+
+            </tr>
+
+        `;
+
+    }
+
+}
+
+
+
+// =================================================
+// LOAD CURRENT STUDENT PROFILE
+// =================================================
+
+async function loadProfile() {
+
+    try {
+
+        const studentId =
+            getCurrentStudent();
+
+
+        if (!studentId) {
+
+            document.getElementById(
+                "userName"
+            ).textContent =
+                "Student";
+
+            document.getElementById(
+                "userAvatar"
+            ).textContent =
+                "S";
+
+            return;
+
+        }
+
+
+        const response =
+            await fetch(
+                `${API}/students/profile/${encodeURIComponent(studentId)}`
+            );
+
+
+        const result =
+            await response.json();
+
+
+        if (
+            result.success &&
+            result.data
+        ) {
+
+            const student =
+                result.data;
+
+
+            document.getElementById(
+                "userName"
+            ).textContent =
+                student.name;
+
+
+            document.getElementById(
+                "userAvatar"
+            ).textContent =
+                student.name
+                    .charAt(0)
+                    .toUpperCase();
+
+        }
+
+    }
+
+    catch (error) {
+
+        console.log(
+            "Profile Error:",
+            error
+        );
+
+    }
+
+}
+
+
+
+// =================================================
+// SEARCH
+// =================================================
+
+const searchInput =
+    document.querySelector(
+        ".search input"
+    );
+
+
+searchInput.addEventListener(
+    "keypress",
+    function(event) {
+
+        if (
+            event.key === "Enter"
+        ) {
+
+            const value =
+                searchInput.value.trim();
+
+
+            if (value !== "") {
+
+                window.location.href =
+                    "find-skills.html?search=" +
+                    encodeURIComponent(value);
+
+            }
+
+        }
+
+    }
+);
+
+
+
+// =================================================
+// SECURITY FUNCTION
+// =================================================
+
+function escapeHTML(value) {
+
+    if (
+        value === null ||
+        value === undefined
+    ) {
+
+        return "";
+
+    }
+
+
+    return String(value)
+
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+
+
+// =================================================
+// START DASHBOARD
+// =================================================
+
+loadDashboard();
+
+loadRequests();
+
+loadProfile();
+
+
+</script>
+
+</body>
+
+</html>

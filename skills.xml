@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<skills>
+
+    <skill>
+        <id>SK001</id>
+        <name>Java</name>
+        <category>Programming</category>
+        <level>Advanced</level>
+        <description>Object-oriented programming language</description>
+    </skill>
+
+    <skill>
+        <id>SK002</id>
+        <name>Python</name>
+        <category>Programming</category>
+        <level>Intermediate</level>
+        <description>Programming language used for software development</description>
+    </skill>
+
+    <skill>
+        <id>SK003</id>
+        <name>HTML and CSS</name>
+        <category>Web Development</category>
+        <level>Advanced</level>
+        <description>Technologies used to create and design web pages</description>
+    </skill>
+
+    <skill>
+        <id>SK004</id>
+        <name>JavaScript</name>
+        <category>Web Development</category>
+        <level>Intermediate</level>
+        <description>Client-side scripting language for web applications</description>
+    </skill>
+
+    <skill>
+        <id>SK005</id>
+        <name>Oracle SQL</name>
+        <category>Database</category>
+        <level>Intermediate</level>
+        <description>SQL technology used for database management</description>
+    </skill>
+
+    <skill>
+        <id>SK006</id>
+        <name>C++</name>
+        <category>Programming</category>
+        <level>Beginner</level>
+        <description>Programming language used for object-oriented programming</description>
+    </skill>
+
+    <skill>
+        <id>SK007</id>
+        <name>Node.js</name>
+        <category>Server-side Programming</category>
+        <level>Intermediate</level>
+        <description>JavaScript runtime used for server-side development</description>
+    </skill>
+
+    <skill>
+        <id>SK008</id>
+        <name>Computer Networking</name>
+        <category>Networking</category>
+        <level>Intermediate</level>
+        <description>Fundamentals of computer networks and communication</description>
+    </skill>
+
+</skills>
